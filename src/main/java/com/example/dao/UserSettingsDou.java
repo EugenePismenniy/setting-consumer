@@ -14,11 +14,9 @@ import java.util.Date;
  * @author it100985pev on 12.08.16 13:48.
  */
 public interface UserSettingsDou extends JpaRepository<UserSettings, String> {
-	@Query("select u.dateEdit from UserSettings u where u.login = ?1")
 
-	@Cacheable(cacheNames = "dateEdit")
+	@Query("select u.dateEdit from UserSettings u where u.login = ?1")
 	Date findDateEditByLogin(String login);
 
-	@CacheEvict(cacheNames = "dateEdit", key = "#u.login")
 	UserSettings saveAndFlush(UserSettings u);
 }

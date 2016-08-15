@@ -1,8 +1,8 @@
 package com.example;
 
 import com.example.dao.UserDao;
-import com.example.dao.UserSettingsDou;
 import com.example.domain.UserSettings;
+import com.example.settings.SettingsProvider;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,7 +12,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -44,7 +43,7 @@ public class SettingConsumerApplication {
 	private UserDao userDao;
 
 	@Autowired
-	private UserSettingsDou userSettingsDou;
+	private SettingsProvider settingsProvider;
 
 	@RequestMapping(method = RequestMethod.GET)
 	public String index(Model model, Principal principal, HttpServletResponse response) {
@@ -55,7 +54,7 @@ public class SettingConsumerApplication {
 		response.addCookie(new Cookie("userName", login));
 
 
-		Date dateEdit = userSettingsDou.findDateEditByLogin(login);
+		Date dateEdit = settingsProvider.getDateEditByLogin(login);
 
 		LOG.info("{} user setting date edit {}", login, dateEdit);
 
@@ -67,11 +66,11 @@ public class SettingConsumerApplication {
 	@RequestMapping(value = "/updateDateEdit", method = RequestMethod.GET)
 	public String updateDateEdit(Principal principal) {
 
-		UserSettings userSettings = userSettingsDou.findOne(principal.getName());
+		UserSettings userSettings = settingsProvider.getUserSettingsByLogin(principal.getName());
 
 		userSettings.setDateEdit(new Date());
 
-		userSettingsDou.saveAndFlush(userSettings);
+		settingsProvider.save(userSettings);
 
 		return "ok";
 	}
