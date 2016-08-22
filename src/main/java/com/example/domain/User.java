@@ -17,7 +17,6 @@ import javax.persistence.Table;
 @Table(name = "USER")
 @Getter
 @Setter
-@ToString
 @NoArgsConstructor
 public class User {
 	@Id

@@ -23,14 +23,14 @@ public class SettingsProviderDefaultImpl implements SettingsProvider {
 	@Autowired
 	private UserSettingsDou userSettingsDou;
 
-	@Cacheable(cacheNames = "dateEdit", key = "#login")
+	@Cacheable(cacheNames = "settingsVersion", key = "#login")
 	@Override
-	public Date getDateEditByLogin(String login) {
+	public int getSettingsVersionByLogin(String login) {
 		LOG.info("get dateEdit without cache: login = '{}'", login);
-		return userSettingsDou.findDateEditByLogin(login);
+		return userSettingsDou.getSettingsVersionByLogin(login);
 	}
 
-	@CacheEvict(cacheNames = "dateEdit", key = "#userSettings.login")
+	@CacheEvict(cacheNames = "settingsVersion", key = "#userSettings.login")
 	@Override
 	public UserSettings save(UserSettings userSettings) {
 		LOG.info("save new user settings = {}", userSettings);

@@ -9,7 +9,7 @@ import java.util.Date;
  */
 public interface SettingsProvider {
 
-	Date getDateEditByLogin(String login);
+	int getSettingsVersionByLogin(String login);
 
 	UserSettings save(UserSettings userSettings);
 

@@ -1,15 +1,9 @@
 package com.example.domain;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
+import org.apache.commons.codec.digest.DigestUtils;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import java.util.Date;
+import javax.persistence.*;
 
 /**
  * @author it100985pev on 12.08.16 12:20.
@@ -18,6 +12,8 @@ import java.util.Date;
 @Table(name = "USER_SETTINGS")
 @NoArgsConstructor
 @ToString
+@Getter
+@Setter
 public class UserSettings {
 
 	@Id
@@ -25,20 +21,9 @@ public class UserSettings {
 	private String login;
 
 	@Column(name = "VALUE")
-	@Getter
-	@Setter
 	private String value;
 
-	@Column(name = "DATE_EDIT")
-	@Getter
-	@Setter
-	private Date dateEdit;
-
-	public String getLogin() {
-		return login;
-	}
-
-	public void setLogin(String login) {
-		this.login = login;
-	}
+	@Column(name = "VERSION")
+	@Version
+	private int version;
 }

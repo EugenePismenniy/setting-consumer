@@ -15,8 +15,8 @@ import java.util.Date;
  */
 public interface UserSettingsDou extends JpaRepository<UserSettings, String> {
 
-	@Query("select u.dateEdit from UserSettings u where u.login = ?1")
-	Date findDateEditByLogin(String login);
+	@Query("select u.version from UserSettings u where u.login = ?1")
+	int getSettingsVersionByLogin(String login);
 
 	UserSettings saveAndFlush(UserSettings u);
 }
