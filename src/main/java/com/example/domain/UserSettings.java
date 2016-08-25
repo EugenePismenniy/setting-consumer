@@ -1,8 +1,7 @@
 package com.example.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
-import org.apache.commons.codec.digest.DigestUtils;
-
 import javax.persistence.*;
 
 /**
