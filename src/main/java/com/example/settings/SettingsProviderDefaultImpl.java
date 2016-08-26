@@ -8,14 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.stereotype.Repository;
-
-import java.util.Date;
+import org.springframework.stereotype.Service;
 
 /**
  * @author it100985pev on 15.08.16 14:03.
  */
-@Repository("settingsProviderDefaultImpl")
+@Service("settingsProviderDefaultImpl")
 public class SettingsProviderDefaultImpl implements SettingsProvider {
 
 	private static final Logger LOG = LoggerFactory.getLogger(SettingsProviderDefaultImpl.class);
@@ -23,22 +21,26 @@ public class SettingsProviderDefaultImpl implements SettingsProvider {
 	@Autowired
 	private UserSettingsDou userSettingsDou;
 
-	@Cacheable(cacheNames = "settingsVersion", key = "#login")
+	@Cacheable(cacheNames = "settingsVersion")
 	@Override
 	public int getSettingsVersionByLogin(String login) {
-		LOG.info("get dateEdit without cache: login = '{}'", login);
+		LOG.info("get version without cache: login = '{}'", login);
 		return userSettingsDou.getSettingsVersionByLogin(login);
 	}
 
-	@CacheEvict(cacheNames = "settingsVersion", key = "#userSettings.login")
+	@CacheEvict(cacheNames = "settingsVersion", key = "#userSettings.login", beforeInvocation = true)
+	@CachePut(cacheNames = "settingsVersion", key = "#userSettings.login")
 	@Override
-	public UserSettings save(UserSettings userSettings) {
-		LOG.info("save new user settings = {}", userSettings);
-		return userSettingsDou.saveAndFlush(userSettings);
+	public int save(UserSettings userSettings) {
+		LOG.info("save new user settings = {} and get version", userSettings);
+		UserSettings us = userSettingsDou.saveAndFlush(userSettings);
+		return us.getVersion();
 	}
 
+	@CacheEvict(cacheNames = "settingsVersion", key = "#login")
 	@Override
 	public UserSettings getUserSettingsByLogin(String login) {
+		LOG.info("get user settings by login = {}", login);
 		return userSettingsDou.findOne(login);
 	}
 }
